@@ -30,6 +30,8 @@ class Knight(AbcRider):
             return
         if self.full_heal:
             self.health_meter = self.max_hp
+            print_bold("You are HEALED!", end=' ')
+            show_health(self, bold=True)
         else:
             self.health_meter = min(self.max_hp, self.health_meter + by)
 
@@ -68,4 +70,4 @@ class Knight(AbcRider):
             else:
                 print_bold("Friend sighted!")
             hut.acquire(self)
-            self.heal()
+            self.heal(full_heal=True)
