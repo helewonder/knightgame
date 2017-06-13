@@ -8,8 +8,12 @@ class Knight(AbcRider):
     def __init__(self, name, max_hp=40):
         self.name = name
         self.health_meter = max_hp
+        self.max_hp = max_hp
         if self.name != 'Sir Foo':
             self.unit_type = "friend"
+            self.self_heal = False
+        elif self.name == 'Sir Foo':
+            self.unit_type = 'player'
             self.self_heal = True
 
     def attack(self, combatant):
@@ -28,10 +32,11 @@ class Knight(AbcRider):
     def heal(self, by=2, full_heal=False):
         if self.health_meter == self.max_hp:
             return
-        if self.full_heal:
+        if full_heal:
             self.health_meter = self.max_hp
             print_bold("You are HEALED!", end=' ')
             show_health(self, bold=True)
+            print()
         else:
             self.health_meter = min(self.max_hp, self.health_meter + by)
 
@@ -52,6 +57,8 @@ class Knight(AbcRider):
                 if continue_attack == 'n':
                     self.run_away()
                     break
+                else:
+                    continue_attack = 'y'
 
                 self.attack(hut.occupant)
 

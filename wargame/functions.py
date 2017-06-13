@@ -12,7 +12,7 @@ def print_wave_line(width=80):
 
 
 def show_health(rider, bold=False, end=' '):
-    info = "Health:{} {}".format(rider.name, rider.health_meter)
+    info = "||{:}'s Health=>{:2d}||".format(rider.name, rider.health_meter)
     if bold:
         print_bold(info, end=end)
     else:

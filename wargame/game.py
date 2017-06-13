@@ -1,5 +1,5 @@
 import random
-from functions import print_bold, print_dotted_line, show_health
+from functions import print_bold, print_dotted_line, show_health, print_wave_line
 from knight import Knight
 from orcrider import OrcRider
 from hut import Hut
@@ -23,25 +23,36 @@ class OrGame():
     def _process_user_choice(self):
         verifying_choice = True
         idx = 0
-        print("Current occupants: %s" % self.get_occupants)
+        print_dotted_line()
+        print("Current Occupants:\n\t%s" % self.get_occupants)
+        print_dotted_line()
         while verifying_choice:
             user_choice = input(
                 "Choose a hut number to enter(1~" + str(self.hut_numbers) + "):")
             try:
-                if not user_choice.isnumber():
+                if not user_choice.isdigit():
                     raise HutNotNumberError(
-                        "Your input {} is not number.".format(user_choice))
+                        "Your input '{}' is not number.".format(user_choice))
 
                 idx = int(user_choice)
                 if idx > self.hut_numbers or idx < 0:
                     raise HutOutRangeError(
-                        "input not in range(1~" + str(self.hut_numbers))
+                        "input not in range(1~" + str(self.hut_numbers)+")")
 
-            except HutNotNumberError:
-                break
+            except HutNotNumberError as e:
+                print_wave_line()
+                print(e)
+                print(e.error_message)
+                print_wave_line()
+                continue
 
-            except HutOutRangeError:
-                break
+            except HutOutRangeError as e:
+                print_wave_line()
+                print(e)
+                print(e.error_message)
+                print_wave_line()
+                continue
+
 
             if self.huts[idx - 1].is_acquired:
                 print(
@@ -58,9 +69,9 @@ class OrGame():
         for i in range(self.hut_numbers):
             occupant = random.choice(occupants)
             if occupant == 'enemy':
-                self.huts.append(Hut(i + 1, OrcRider('enemy' + str(i + 1))))
+                self.huts.append(Hut(i + 1, OrcRider('enemy-' + str(i + 1))))
             elif occupant == 'friend':
-                self.huts.append(Hut(i + 1, Knight('knight' + str(i + 1))))
+                self.huts.append(Hut(i + 1, Knight('knight-' + str(i + 1))))
             else:
                 self.huts.append(Hut(i + 1, None))
 
@@ -70,7 +81,7 @@ class OrGame():
         acquired_all_huts = False
 
         self._show_mission()
-        print_bold("Current Occupants:", self.get_occupants)
+        # print_bold("Current Occupants:", self.get_occupants)
         show_health(self.player, bold=True, end='\n')
 
         while not acquired_all_huts:
