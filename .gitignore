@@ -12,4 +12,5 @@ ehthumbs.db
 Desktop.ini
 
 # My configuration:
-.vscode
+/.vscode
+.vscode/
