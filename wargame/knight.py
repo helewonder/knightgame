@@ -1,7 +1,6 @@
 import random
-from functions import print_bold, print_dotted_line, show_health
+from functions import print_bold, weighted_random_selection, show_health
 from rider import AbcRider
-from hut import Hut
 
 
 class Knight(AbcRider):
