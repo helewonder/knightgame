@@ -17,7 +17,7 @@ class OrGame():
         msg = "["
         for hut in self.huts:
             msg += str(hut.number) + ":" + hut.get_occupant_type + ", "
-        msg += '\b]'
+        msg += '\b\b]'
         return msg
 
     def _process_user_choice(self):
