@@ -19,13 +19,14 @@ class Knight(AbcRider):
     def attack(self, combatant):
         if self.self_heal:
             self.heal()
-        hit_list = ['player'] * 4 + ['enemy'] * 6
-        injured_unit = random.choice(hit_list)
+        injured_unit = weighted_random_selection(self, combatant)
         injury = random.randint(10, 15)
-        if injured_unit == 'player':
-            self.health_meter = max(self.health_meter - injury, 0)
-        elif injured_unit == 'enemy':
-            combatant.health_meter = max(combatant.health_meter - injury, 0)
+        injured_unit.health_meter = max(injured_unit.health_meter - injury, 0)
+        # if injured_unit == 'player':
+        #     self.health_meter = max(self.health_meter - injury, 0)
+        # elif injured_unit == 'enemy':
+        #     combatant.health_meter = max(combatant.health_meter - injury, 0)
+        print("ATTACK! ", end='')
         show_health(self)
         show_health(combatant)
 
