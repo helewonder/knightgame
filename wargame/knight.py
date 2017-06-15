@@ -4,7 +4,7 @@ from rider import AbcRider
 
 
 class Knight(AbcRider):
-    def __init__(self, name, max_hp=40):
+    def __init__(self, name="", max_hp=40):
         self.name = name
         self.health_meter = max_hp
         self.max_hp = max_hp
@@ -20,7 +20,9 @@ class Knight(AbcRider):
             self.heal()
         injured_unit = weighted_random_selection(self, combatant)
         injury = random.randint(10, 15)
-        injured_unit.health_meter = max(injured_unit.health_meter - injury, 0)
+        if injured_unit is not None:
+            injured_unit.health_meter = max(injured_unit.health_meter - injury,
+                                            0)
         # if injured_unit == 'player':
         #     self.health_meter = max(self.health_meter - injury, 0)
         # elif injured_unit == 'enemy':

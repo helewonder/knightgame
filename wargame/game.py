@@ -1,19 +1,33 @@
-import random
-from functions import print_bold, print_dotted_line, show_health, print_wave_line
+from hut import Hut, create_unit
+from functions import print_bold, print_dotted_line, show_health, \
+    print_wave_line
 from knight import Knight
-from orcrider import OrcRider
-from hut import Hut
 from uniterror import HutNotNumberError, HutOutRangeError
 
 
 class OrGame():
+    """
+    The Game Class , mainly
+    """
+
     def __init__(self, hut_numbers=5):
+        """get the game ready with scenario ready, default have 5huts.
+
+        :param hut_numbers: in the game, how many huts
+        :type hut_numbers: int
+        """
+        self.acquired_all_huts = False
         self.huts = []
         self.player = None
         self.hut_numbers = hut_numbers
 
     @property
     def get_occupants(self):
+        """Show all huts with it's occupant
+
+        :return: the message each hut with occupant
+        :rtype: basestring
+        """
         msg = "["
         for hut in self.huts:
             msg += str(hut.number) + ":" + hut.get_occupant_type + ", "
@@ -28,7 +42,8 @@ class OrGame():
         print_dotted_line()
         while verifying_choice:
             user_choice = input(
-                "Choose a hut number to enter(1~" + str(self.hut_numbers) + "):")
+                "Choose a hut number to enter(1~" + str(
+                    self.hut_numbers) + "):")
             try:
                 if not user_choice.isdigit():
                     raise HutNotNumberError(
@@ -37,7 +52,7 @@ class OrGame():
                 idx = int(user_choice)
                 if idx > self.hut_numbers or idx < 0:
                     raise HutOutRangeError(
-                        "input not in range(1~" + str(self.hut_numbers)+")")
+                        "input not in range(1~" + str(self.hut_numbers) + ")")
 
             except HutNotNumberError as e:
                 print_wave_line()
@@ -53,7 +68,6 @@ class OrGame():
                 print_wave_line()
                 continue
 
-
             if self.huts[idx - 1].is_acquired:
                 print(
                     "You have already acquired this hut. Try again",
@@ -64,27 +78,15 @@ class OrGame():
 
         return idx
 
-    def _occupy_huts(self):
-        occupants = [None, 'friend', 'enemy']
-        for i in range(self.hut_numbers):
-            occupant = random.choice(occupants)
-            if occupant == 'enemy':
-                self.huts.append(Hut(i + 1, OrcRider('enemy-' + str(i + 1))))
-            elif occupant == 'friend':
-                self.huts.append(Hut(i + 1, Knight('knight-' + str(i + 1))))
-            else:
-                self.huts.append(Hut(i + 1, None))
-
     def play(self):
-        self.player = Knight("Sir Foo")
-        self._occupy_huts()
-        acquired_all_huts = False
+        """
+        Workhorse method to play the game....
+        Create a Knight instance, create huts and preoccupy them with a game
+        Character instance (or leave empty)
+        """
+        self.setup_game_scenario()
 
-        self._show_mission()
-        # print_bold("Current Occupants:", self.get_occupants)
-        show_health(self.player, bold=True, end='\n')
-
-        while not acquired_all_huts:
+        while not self.acquired_all_huts:
             idx = self._process_user_choice()
             self.player.acquire_hut(self.huts[idx - 1])
 
@@ -96,10 +98,21 @@ class OrGame():
                 if not hut.is_acquired:
                     break
             else:
-                acquired_all_huts = True
+                self.acquired_all_huts = True
 
-        if acquired_all_huts:
+        if self.acquired_all_huts:
             print_bold("You Win!!! Congratulations!!!!!!")
+
+    def setup_game_scenario(self):
+        """
+        Create player and huts and then randomly pre-occupy huts...
+        """
+        self.player = Knight("Sir Foo")
+        for number in range(self.hut_numbers):
+            self.huts.append(Hut(number + 1, create_unit()))
+        self._show_mission()
+        # print_bold("Current Occupants:", self.get_occupants)
+        show_health(self.player, bold=True, end='\n')
 
     @staticmethod
     def _show_mission():
