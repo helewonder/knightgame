@@ -13,9 +13,8 @@ ehthumbs.db
 Desktop.ini
 
 # My configuration:
-/.vscode
 .vscode/
-/.idea
 .idea/
 wargame/__pycache__/
 wargame/test/
+.cache/
